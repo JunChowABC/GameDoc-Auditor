@@ -1,0 +1,39 @@
+name: Unpack sanitized source
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - GameDoc-Auditor-v0.9-public.zip
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Extract public source
+        run: |
+          python - <<'PY'
+          import pathlib, zipfile
+          archive = pathlib.Path("GameDoc-Auditor-v0.9-public.zip")
+          with zipfile.ZipFile(archive) as z:
+              for info in z.infolist():
+                  name = pathlib.PurePosixPath(info.filename)
+                  if not info.filename.startswith("GameDoc-Auditor-v0.9/") or info.is_dir():
+                      continue
+                  relative = pathlib.PurePosixPath(*name.parts[1:])
+                  if not relative.parts or ".." in relative.parts:
+                      raise ValueError("Unsafe archive path")
+                  dest = pathlib.Path(*relative.parts)
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(z.read(info))
+          PY
+      - name: Commit unpacked project
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/ examples/ tests/ .github/workflows/ start-windows.bat LICENSE PRIVACY.md README-V08-RECOVERY.md README-V09-UPGRADE.md .gitignore
+          git diff --cached --quiet || (git commit -m "chore: unpack sanitized V0.9 source" && git push)
