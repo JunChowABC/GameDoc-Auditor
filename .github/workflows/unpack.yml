@@ -28,6 +28,8 @@ jobs:
                   relative = pathlib.PurePosixPath(*name.parts[1:])
                   if not relative.parts or ".." in relative.parts:
                       raise ValueError("Unsafe archive path")
+                  if relative.parts[:2] == (".github", "workflows") or relative.as_posix() == "README.md":
+                      continue
                   dest = pathlib.Path(*relative.parts)
                   dest.parent.mkdir(parents=True, exist_ok=True)
                   dest.write_bytes(z.read(info))
@@ -36,5 +38,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist/ examples/ tests/ .github/workflows/ start-windows.bat LICENSE PRIVACY.md README-V08-RECOVERY.md README-V09-UPGRADE.md .gitignore
+          git add dist/ examples/ tests/ start-windows.bat LICENSE PRIVACY.md README-V08-RECOVERY.md README-V09-UPGRADE.md .gitignore
           git diff --cached --quiet || (git commit -m "chore: unpack sanitized V0.9 source" && git push)
