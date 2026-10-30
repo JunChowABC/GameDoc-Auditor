@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "XEXAMPLE_STAMINA",
+      "title": "体力消耗需要恢复规则",
+      "kind": "requiredWhen",
+      "severity": "medium",
+      "enabled": true,
+      "trigger": "消耗体力",
+      "required": "恢复体力",
+      "field": "",
+      "min": null,
+      "max": null,
+      "fix": "补充恢复速度、恢复条件、离线计时以及超过体力上限时的处理。"
+    },
+    {
+      "id": "XEXAMPLE_LEVELCAP",
+      "title": "等级上限需要在合理区间内",
+      "kind": "numericRange",
+      "severity": "low",
+      "enabled": true,
+      "trigger": "",
+      "required": "",
+      "field": "等级上限",
+      "min": 1,
+      "max": 200,
+      "fix": "核对项目等级曲线或调整本项目的等级上限阈值。"
+    }
+  ],
+  "aliases": [
+    {
+      "canonical": "体力上限",
+      "terms": ["最高体力", "极限体力", "体力容量"]
+    }
+  ]
+}

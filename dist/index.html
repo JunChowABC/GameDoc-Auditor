@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta name="theme-color" content="#f7f8fc" />
+  <meta name="description" content="GameDoc Auditor - 开源、离线、纯规则驱动的多文档游戏策划审校工具" />
+  <title>GameDoc Auditor · 游戏策划案审校</title><link rel="stylesheet" href="./style.css" /><link rel="stylesheet" href="./customization.css" /><link rel="stylesheet" href="./upload.css" />
+  <link rel="stylesheet" href="./document-ui-v09.css" />
+</head>
+<body>
+ <div class="shell">
+  <aside class="sidebar" aria-label="导航">
+   <div class="brand"><div class="brand-icon">G<i></i></div><div><strong>GameDoc</strong><small>AUDITOR STUDIO</small></div></div>
+   <div class="nav-label">WORKSPACE</div>
+   <button class="nav active" data-page="audit"><span class="nav-icon">▤</span> 文档审校 <span class="nav-suffix">01</span></button>
+   <button class="nav" data-page="graph"><span class="nav-icon">◇</span> 关联画布 <span class="nav-suffix">NEW</span></button>
+   <button class="nav" data-page="rules"><span class="nav-icon">▦</span> 规则库</button>
+   <button class="nav" data-page="history"><span class="nav-icon">◷</span> 审校历史</button>
+   <div class="sidebar-bottom"><div class="version-card"><span class="live-dot"></span><span>纯规则引擎已就绪</span><small>OFFLINE</small></div><p>V0.9 功能复原升级版 · 离线规则引擎<br />零 API / 零 AI 依赖</p></div>
+  </aside>
+  <main class="main">
+   <header class="topbar"><div class="crumb">工作空间 <span>/</span> <b id="crumbCurrent">文档审校</b></div><div class="top-right"><span class="privacy">◆ 100% 本地检测 · 无需 API</span><span class="avatar">G</span></div></header>
+   <div class="content">
+    <section id="page-audit" class="page active">
+     <div class="heading-row"><div><div class="eyebrow"><span class="eyebrow-dot"></span> GAME DESIGN QUALITY WORKSPACE</div><h1>让每一份策划案，<em>经得起开发。</em></h1><p class="subtitle">上传多个策划文档，检查规则缺漏、参数冲突与跨文档不一致。无需 AI、无需密钥，结果可追溯。</p></div><button class="heading-pill graph-entry" id="openGraph">◇ <span>查看关联画布</span> <b>NEW</b></button></div>
+     <div class="stats"><div class="stat"><div class="stat-label">启用规则 <span>↗</span></div><div class="stat-value" id="statRules">—</div><div class="stat-note">内置 64 条 + 自定义规则</div></div><div class="stat"><div class="stat-label">发现问题 <span>◎</span></div><div class="stat-value" id="statIssues">—</div><div class="stat-note" id="statIssuesNote">运行审校后显示结果</div></div><div class="stat"><div class="stat-label">跨文档冲突 <span>⇄</span></div><div class="stat-value" id="statCross">—</div><div class="stat-note">多个文档对同一参数的不同定义</div></div><div class="stat"><div class="stat-label">严重风险 <span>!</span></div><div class="stat-value accent-red" id="statHigh">—</div><div class="stat-note">建议优先核对</div></div></div>
+     <section class="upload-zone" id="uploadZone" aria-label="文档批量上传区" tabindex="0"><div class="upload-glyph">↥</div><div class="upload-copy"><strong>上传策划文档，自动提取内容并加入工作区</strong><p>支持拖拽多个文件，或点击右侧选择文件。Word / PDF 在浏览器本地解析，不会上传到服务器。</p><div class="upload-formats"><span>.docx</span><span>.pdf</span><span>.md</span><span>.txt</span><span>.json</span><small>单个不超过 12 MB · 最多 30 份</small></div></div><label class="upload-action" for="fileInput">＋ 选择文档</label></section>
+     <div id="uploadFeedback" class="upload-feedback hidden" role="status" aria-live="polite"></div>
+     <div class="workspace-grid">
+      <section class="panel editor-panel"><div class="panel-head"><div class="panel-title"><span class="title-icon">⌘</span><div><h2>文档工作区</h2><span id="docSetInfo">1 份文档 · 支持多文档对照</span></div></div><div class="head-actions"><button class="text-btn" id="loadSample">▤ 双文档示例</button><button class="text-btn" id="addDoc">＋ 新建</button></div></div>
+       <div class="doc-tabs" id="docTabs" aria-label="文档列表"></div>
+       <div class="editor-meta"><div class="field"><label for="docName">当前文档名称</label><input id="docName" value="未命名策划案" maxlength="90" /></div><button class="remove-doc" id="removeDoc" title="移除当前文档">移除这份文档</button></div>
+       <div class="tabs"><button class="tab active" data-editor-tab="edit">文档编辑</button><button class="tab" data-editor-tab="preview">按行定位</button><div class="tab-fill"></div><span class="char-count" id="charCount">0 字 · 0 行</span></div>
+       <div class="editor-pane" id="editPane"><textarea id="docInput" spellcheck="false" placeholder="# 游戏设计文档（GDD）&#10;&#10;在这里粘贴策划案正文，或使用下方按钮导入 .md / .txt 文件。&#10;&#10;建议包含核心循环、资源产出与消耗、胜负条件、数值规则和界面交互等章节。"></textarea></div>
+       <div class="source-preview hidden" id="previewPane"><div id="sourceLines" class="source-lines"></div></div>
+       <div class="panel-foot"><label class="file-btn" for="fileInput">↥ 批量导入 <small>Word / PDF / 文本</small></label><input id="fileInput" type="file" multiple accept=".docx,.pdf,.md,.txt,.json,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,text/plain,text/markdown,application/json" hidden /><span class="local-hint">支持拖拽 · 仅本地读取</span><button class="primary-btn" id="runAudit">✦ 审校全部文档 <span class="arrow">→</span></button></div>
+      </section>
+      <section class="panel results-panel"><div class="panel-head"><div class="panel-title"><span class="title-icon violet">◉</span><div><h2>审校结果</h2><span id="resultSubtitle">等待提交文档</span></div></div><div class="result-head-actions"><button class="icon-btn" id="copySummary" title="复制结果摘要" disabled>⧉</button><button class="icon-btn" id="downloadMd" title="导出 Markdown 报告" disabled>↓</button></div></div>
+       <div id="emptyResult" class="empty-result"><div class="empty-illustration"><div class="paper"><i></i><i></i><i></i><i></i><span class="scan">✧</span></div><span class="orbit orbit-one">✦</span><span class="orbit orbit-two">✧</span></div><h3>准备好进行多文档审校了吗？</h3><p>可以导入多份策划案，或者点击「双文档示例」。<br />规则引擎会同时检查每份文档，以及文档之间的矛盾。</p><div class="empty-tags"><span>规则缺漏</span><span>跨文档冲突</span><span>数值边界</span><span>逻辑一致性</span></div></div>
+       <div id="resultContent" class="hidden"><div class="report-banner"><div><div class="report-eyebrow">RULE-BASED REVIEW SUMMARY</div><h3 id="reportHeadline">已完成审校</h3><p id="reportSummary"></p></div><div class="score-ring" id="scoreRing"><span id="scoreValue">0</span><small>风险指数</small></div></div><div class="filter-bar"><button class="filter active" data-filter="all">全部 <span id="countAll">0</span></button><button class="filter" data-filter="cross">跨文档 <span id="countCross">0</span></button><button class="filter" data-filter="high">严重 <span id="countHigh">0</span></button><button class="filter" data-filter="medium">中等 <span id="countMedium">0</span></button><button class="filter" data-filter="low">提示 <span id="countLow">0</span></button></div><div class="issue-list" id="issueList"></div><div class="report-foot"><span id="reportTime">—</span><button class="link-btn" id="downloadJson">导出 JSON ↗</button></div></div>
+      </section>
+     </div>
+     <div class="notice"><span class="notice-icon">i</span><p><b>纯规则驱动 · 文档工作区 V0.9</b>：支持 Word、PDF 和纯文本策划文档的本地导入。PDF 扫描件暂不支持 OCR；图片、表格样式不会作为结构保留。修改自定义规则后重新运行审校即可生效。</p></div>
+    </section>
+    <section id="page-graph" class="page">
+     <div class="heading-row"><div><div class="eyebrow">DOCUMENT RELATIONSHIP CANVAS</div><h1>从分散的文档中，<em>找到彼此的关联。</em></h1><p class="subtitle">节点代表策划文档，连线代表检测到的关联。点击连线可查看双方证据，并定位原文。</p></div><span class="graph-mode">◇ 无 AI · 规则识别</span></div>
+     <div class="graph-statbar"><div><span>文档节点</span><strong id="graphNodeCount">0</strong></div><div><span>关联文档对</span><strong id="graphEdgeCount">0</strong></div><div><span>关联依据</span><strong id="graphRelationCount">0</strong></div><div><span>冲突关联</span><strong id="graphConflictCount">0</strong></div></div>
+     <div class="graph-toolbar"><div class="graph-filter"><label for="graphType">关系类型</label><select id="graphType"><option value="all">全部关系</option><option value="conflict">仅冲突</option><option value="field">共同字段</option><option value="reference">明确引用</option><option value="flow">候选资源流向</option><option value="topic">主题共现</option></select></div><label class="graph-toggle"><input id="graphHideWeak" type="checkbox" /> 隐藏仅主题共现</label><label class="graph-toggle"><input id="graphFocusMode" type="checkbox" /> 聚焦选中关系</label><label class="graph-focus-select" for="graphFocusDoc">查看文档 <select id="graphFocusDoc" aria-label="查看文档"><option>选择文档</option></select></label><div class="graph-actions"><button id="graphRefresh">↻ 重新识别</button><button id="graphReset">⌖ 重置视图</button><button id="graphExportSvg">↓ SVG</button><button id="graphExportJson">↓ JSON</button></div></div>
+     <div class="graph-layout"><div class="graph-board"><div class="graph-legend"><span><i class="legend-red"></i> 规则冲突</span><span><i class="legend-purple"></i> 明确引用</span><span><i class="legend-blue"></i> 共享字段 / 候选流向</span><span><i class="legend-gray"></i> 主题共现</span></div><svg id="relationCanvas" viewBox="0 0 1080 650" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="游戏策划文档关系图"><g id="graphWorld"></g></svg><div class="graph-canvas-help"><span id="graphFocusHint">点击节点聚焦 · 滚轮缩放 · 拖拽空白区域平移 · 点击连线看证据</span></div><div class="graph-empty hidden" id="graphEmpty">请先在「文档审校」中添加文档，再返回关联画布。</div></div><aside class="graph-inspector"><div class="graph-inspector-head"><h3>关系详情</h3><span id="graphInspectHint">点击节点或连线</span></div><div id="graphInspector" class="graph-inspector-body"><div class="graph-welcome"><span>◇</span><b>选择一条关联</b><p>这里会显示关联类型、判断依据与双方文档行号。所有关联都可追溯到原文。</p></div></div></aside></div>
+     <div class="notice"><span class="notice-icon">i</span><p><b>关联≠依赖</b>：明确引用与同字段冲突依据较强；主题共现和资源产消仅为候选关联。两份文档同时提到“关卡”并不意味着它们必然存在实现依赖。</p></div>
+    </section>
+    <section id="page-rules" class="page">
+     <div class="heading-row"><div><div class="eyebrow">RULE LIBRARY · CUSTOM STANDARDS</div><h1>把你的策划规范，<em>变成可执行的规则。</em></h1><p class="subtitle">内置审校规则保持不变。自定义检查项和字段别名会参与后续审校、跨文档冲突检查和关联画布。</p></div></div>
+     <div class="config-head"><div><strong>✦ 我的审校规范</strong><p>仅保存在当前浏览器。可导出 JSON，随项目提交到 GitHub 或导入另一台电脑。</p></div><div class="config-head-actions"><button id="configExport" type="button">↓ 导出配置</button><label for="configImportFile">↥ 导入配置</label><input id="configImportFile" type="file" accept=".json,application/json" hidden /></div></div>
+     <div class="config-grid">
+      <section class="config-panel"><div class="config-panel-head"><div><span class="config-index">01</span><h2>自定义审校规则</h2></div><span id="customRuleCount">0 条</span></div><p class="config-desc">自定义触发条件、风险等级与建议。关闭的规则会保留配置，但不会参与审校。</p>
+       <form id="customRuleForm" class="config-form"><input type="hidden" id="customRuleId" />
+        <div class="config-form-row"><label>规则名称<input id="customRuleTitle" maxlength="80" required placeholder="如：体力系统须定义恢复方式" /></label><label>风险等级<select id="customRuleSeverity"><option value="high">严重</option><option value="medium" selected>中等</option><option value="low">提示</option></select></label></div>
+        <label>规则类型<select id="customRuleType"><option value="requiredWhen">出现关键词时必须包含另一项</option><option value="forbidden">禁止出现指定表述</option><option value="requiredField">必填字段</option><option value="numericRange">字段数值范围</option></select></label>
+        <p class="config-hint" id="customRuleHint">例如：出现「消耗体力」但全文没有「恢复体力」时给出提醒。关键词按字面匹配，不执行正则表达式。</p>
+        <div class="config-form-row" id="ruleKeywordRow"><label>触发关键词<input id="customRuleTrigger" maxlength="100" placeholder="消耗体力" /></label><label id="ruleRequiredWrap">必须包含<input id="customRuleRequired" maxlength="100" placeholder="恢复体力" /></label></div>
+        <div class="config-form-row hidden" id="ruleFieldRow"><label>字段名称<input id="customRuleField" maxlength="40" placeholder="每日挑战次数" /></label><label id="ruleMinWrap">最小值<input id="customRuleMin" type="number" step="any" placeholder="可留空" /></label><label id="ruleMaxWrap">最大值<input id="customRuleMax" type="number" step="any" placeholder="可留空" /></label></div>
+        <label>建议处理方式<input id="customRuleFix" maxlength="240" placeholder="补充恢复速度、上限与离线恢复规则" /></label><div class="config-form-actions"><button type="reset" class="config-subtle" id="customRuleCancel">清空 / 取消编辑</button><button type="submit" class="config-primary" id="customRuleSave">＋ 添加规则</button></div>
+       </form><div class="config-list" id="customRuleList"><p class="config-empty">还没有自定义规则。</p></div>
+      </section>
+      <section class="config-panel"><div class="config-panel-head"><div><span class="config-index mint">02</span><h2>字段别名词典</h2></div><span id="aliasCount">0 组</span></div><p class="config-desc">让「最高体力」「体力容量」等不同写法统一为同一参数，用于识别数值冲突、共同字段及数值范围检查。</p>
+       <form id="aliasForm" class="config-form"><input type="hidden" id="aliasEditIndex" /><label>标准字段名<input id="aliasCanonical" maxlength="40" required placeholder="体力上限" /></label><label>其他写法（每行一项）<textarea id="aliasTerms" rows="3" required placeholder="最高体力&#10;体力容量&#10;体力最大值"></textarea></label><div class="config-form-actions"><button type="reset" class="config-subtle" id="aliasCancel">清空 / 取消编辑</button><button type="submit" class="config-primary" id="aliasSave">＋ 添加别名组</button></div></form>
+       <div class="alias-example"><strong>内置词典示例</strong><span>最大体力 → 体力上限</span><span>单局时长 → 关卡时长</span><small>自定义别名优先于内置映射；相同别名不能同时指向两个自定义标准字段。</small></div>
+       <div class="config-list" id="aliasList"><p class="config-empty">还没有自定义别名组。</p></div>
+      </section>
+     </div>
+     <div class="notice"><span class="notice-icon">i</span><p><b>规则适用范围</b>：自定义规则按照明确关键词或字段赋值检查；数值范围按原文数字比较，不做单位转换。字段别名可用于跨文档匹配，但不同玩法阶段或模式下同字段的不同数值仍需人工核对。</p></div>
+     <div class="builtin-rules-title"><div><h2>内置规则库</h2><p>64 条固定规则，作为审校基线；上方自定义配置是额外叠加的规则。</p></div></div>
+     <div class="rules-toolbar"><input id="ruleSearch" type="search" placeholder="搜索内置规则名称、分类或说明..." /><span id="ruleCount">规则加载中</span></div><div class="rule-grid" id="ruleGrid"></div>
+    </section>
+    <section id="page-history" class="page"><div class="heading-row"><div><div class="eyebrow">REVIEW HISTORY</div><h1>每一次审校，<em>都有迹可循。</em></h1><p class="subtitle">保留最近 10 次本机审校记录。可恢复整个文档组及跨文档冲突结果。</p></div></div><div class="history-list" id="historyList"></div></section>
+   </div>
+  </main>
+ </div>
+ <div class="toast" role="status" id="toast"></div>
+ <script src="./engine.js"></script><script src="./relations.js"></script><script src="./customization.js"></script><script src="./importer.js"></script><script src="./app.js"></script><script src="./graph-layout.js"></script><script src="./graph.js"></script>
+  <script src="./document-ui-v09.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* GameDoc UI enhancement: import feedback, vertical document navigator, local Markdown viewer. */
+.upload-feedback-list {
+  --import-row: 34px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:var(--import-row);
+  gap:6px 8px;
+  height:calc(var(--import-row) * 2 + 6px);
+  max-height:calc(var(--import-row) * 2 + 6px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:thin;
+  scrollbar-color:#c6c7dc #f5f6fc;
+  padding-right:5px;
+  overscroll-behavior:contain;
+  align-content:start;
+}
+.upload-feedback-item {height:var(--import-row);min-height:0;overflow:hidden;white-space:nowrap;min-width:0;padding:6px 10px;}
+.upload-feedback-item b{flex:0 1 55%;max-width:55%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-feedback-item small{flex:1 1 auto;min-width:0;max-width:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-feedback-item>span{flex:none}
+/* Keep two visual rows on narrow screens as well, with a single column. */
+@media(max-width:1100px){.upload-feedback-list{grid-template-columns:1fr}}
+
+.editor-panel .doc-workspace {display:flex;flex:1 1 auto;min-height:0;min-width:0;border-bottom:1px solid #edf0f6;}
+.editor-panel .doc-navigator {
+  width:206px;flex:0 0 206px;min-width:0;
+  display:flex;flex-direction:column;min-height:0;
+  padding:15px 10px 11px;
+  background:linear-gradient(180deg,#fbfbff,#f8f9fe);
+  border-right:1px solid #e9edf7;
+}
+.doc-navigator-header{display:flex;justify-content:space-between;align-items:center;padding:0 7px 11px;gap:8px}
+.doc-navigator-header b{font-size:12px;color:#43516e}.doc-navigator-header span{font-size:10px;color:#9489e8;background:#eeeaff;border-radius:9px;padding:3px 7px;white-space:nowrap}
+.doc-search {display:block;width:100%;min-height:34px;margin:0 0 11px;padding:8px 9px;border:1px solid #e4e8f2;border-radius:9px;background:#fff;font-size:11px;color:#354362;outline:none;}
+.doc-search:focus{border-color:#9a91f0;box-shadow:0 0 0 2px #edeaff}
+.doc-navigator .doc-tabs{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;gap:7px;padding:1px 3px 9px 1px;background:transparent;scrollbar-width:thin;scrollbar-color:#c7c5de #f8f9fe;}
+.doc-navigator .doc-chip {width:100%;min-width:0;max-width:100%;flex:none;display:flex;align-items:flex-start;text-align:left;gap:9px;padding:10px 8px;border:1px solid #e4e8f2;border-radius:9px;background:white;transition:background .12s,border-color .12s;min-height:46px}
+.doc-navigator .doc-chip.active{background:#f0edff;border-color:#a79cfa;box-shadow:inset 3px 0 0 #7464ee}
+.doc-navigator .doc-index{font-size:10px;background:#f0eeff;color:#6659e9;border-radius:6px;padding:5px;flex:none;min-width:23px;text-align:center}
+.doc-navigator .doc-chip-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;overflow:hidden;text-overflow:ellipsis;overflow-wrap:anywhere;line-height:1.4;font-size:10.5px}
+.doc-navigator .doc-empty{font-size:10px;color:#9da9ba;text-align:center;padding:18px 6px}
+.editor-panel .doc-body {display:flex;flex-direction:column;flex:1;min-width:0;min-height:0}
+.editor-panel .doc-body .editor-meta{padding:14px 17px 12px}
+.editor-panel .doc-body .tabs{margin:0 17px;gap:17px;min-width:0}
+.editor-panel .doc-body .editor-pane,.editor-panel .doc-body .source-preview{margin:0 17px 15px;flex:1;min-height:0}
+.editor-panel .doc-body .tabs .char-count{font-size:9px;white-space:nowrap}
+.editor-panel .doc-body .tabs .tab{white-space:nowrap}
+.editor-panel .doc-body .doc-markdown-pane{overflow-y:auto;overscroll-behavior:contain;border:1px solid #e7eaf3;border-top:none;border-radius:0 0 9px 9px;background:#fff;}
+.doc-markdown-body {font-size:12px;line-height:1.86;color:#33415b;padding:15px 19px 35px;overflow-wrap:anywhere}
+.doc-markdown-body :is(h1,h2,h3,h4,h5,h6){color:#243451;line-height:1.45;margin:1.2em 0 .65em;font-weight:800;letter-spacing:0}
+.doc-markdown-body h1{font-size:21px;border-bottom:1px solid #e6eaf1;padding-bottom:9px}
+.doc-markdown-body h2{font-size:17px;border-bottom:1px solid #eff1f6;padding-bottom:6px}
+.doc-markdown-body h3{font-size:14px}
+.doc-markdown-body h4,.doc-markdown-body h5,.doc-markdown-body h6{font-size:12px}
+.doc-markdown-body p{margin:0 0 11px}.doc-markdown-body :is(ul,ol){margin:9px 0 14px;padding-left:25px}.doc-markdown-body li{margin:4px 0}
+.doc-markdown-body blockquote{margin:13px 0;padding:9px 14px;border-left:3px solid #9388f6;background:#f7f6ff;color:#61708b}
+.doc-markdown-body hr{border:0;border-top:1px solid #e5e9f4;margin:20px 0}
+.doc-markdown-body code{font:11px/1.6 ui-monospace,Consolas,monospace;background:#f1f3fa;color:#6554bd;padding:2px 4px;border-radius:4px}
+.doc-markdown-body pre{margin:13px 0;padding:14px 16px;background:#222b43;border-radius:8px;overflow-x:auto;max-width:100%;line-height:1.6}
+.doc-markdown-body pre code{color:#e6ecfb;background:none;padding:0;white-space:pre}
+.doc-markdown-body a{color:#6155e8;text-decoration:underline;text-underline-offset:2px}
+.doc-markdown-body .md-table-scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;margin:15px 0 20px;border:1px solid #dfe4f0;border-radius:9px;scrollbar-width:thin}
+.doc-markdown-body table{border-collapse:separate;border-spacing:0;font-size:11px;line-height:1.55;min-width:100%;width:max-content;max-width:none;color:#394969}
+.doc-markdown-body th,.doc-markdown-body td{border-right:1px solid #e5e9f3;border-bottom:1px solid #e7ebf3;padding:9px 12px;text-align:left;vertical-align:top;min-width:78px;max-width:320px;overflow-wrap:anywhere}
+.doc-markdown-body thead th{position:sticky;top:0;background:#f0f1ff;color:#424d74;font-weight:800;z-index:1}
+.doc-markdown-body tbody tr:nth-child(even) td{background:#f9faff}
+.doc-markdown-body tbody tr:hover td{background:#f3f2ff}
+.doc-markdown-body :is(th,td):last-child{border-right:0}
+.doc-markdown-body tbody tr:last-child td{border-bottom:0}
+.doc-markdown-body .md-task{display:inline-block;margin-right:7px;font-size:14px;color:#675aee}
+.doc-markdown-body .md-empty{color:#a0aabc;padding:20px 0}
+/* Keep the editor and results usable when the document list is wider. */
+@media(min-width:1181px){.workspace-grid{grid-template-columns:minmax(0,1.18fr) minmax(0,.92fr)}}
+@media(max-width:1180px){.editor-panel .doc-navigator{width:182px;flex-basis:182px}}
+@media(max-width:690px){
+ .editor-panel .doc-navigator{width:125px;flex-basis:125px;padding:10px 6px}
+ .doc-navigator-header{padding:0 3px 8px}.doc-navigator-header b{font-size:10px}.doc-navigator-header span{font-size:9px;padding:2px 5px}
+ .doc-navigator .doc-chip{padding:7px 5px;gap:5px}.doc-navigator .doc-chip-name{font-size:9px}.doc-navigator .doc-index{min-width:18px;font-size:8px;padding:4px 3px}
+ .editor-panel .doc-body .editor-meta{padding:10px 9px}.editor-panel .doc-body .tabs{gap:8px;margin:0 9px}.editor-panel .doc-body .tab{font-size:9px}
+ .editor-panel .doc-body .editor-pane,.editor-panel .doc-body .source-preview{margin:0 9px 9px}
+ .doc-markdown-body{padding:11px}
+}
+.doc-navigator .doc-chip[hidden]{display:none!important}
+
+/* V0.9 integration: the reader occupies the full remaining document viewport. */
+.editor-panel .doc-body .doc-markdown-pane {
+ flex:1 1 auto; min-height:0; min-width:0;
+ margin:0 17px 15px; overscroll-behavior:contain;
+}
+.editor-panel .doc-workspace {overflow:hidden}
+.editor-panel .doc-body .editor-pane {overflow:hidden}
+@media(max-width:690px){.editor-panel .doc-body .doc-markdown-pane{margin:0 9px 9px}}

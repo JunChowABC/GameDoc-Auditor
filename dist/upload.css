@@ -1,0 +1,15 @@
+/* V0.5 · local multi-format document upload */
+.upload-zone{display:flex;align-items:center;gap:18px;padding:19px 22px;border:1.5px dashed #b9b2f3;border-radius:15px;background:linear-gradient(110deg,#f7f4ff,#fbfdfd);margin-bottom:17px;transition:border-color .2s,background .2s,box-shadow .2s;outline:none}
+.upload-zone.dragging,.upload-zone:focus-visible{border-color:#6257ee;background:#efedff;box-shadow:0 0 0 4px #7667ef18}
+.upload-glyph{width:51px;height:51px;display:grid;place-items:center;background:#edeaff;color:#7161e9;border-radius:13px;font-weight:800;font-size:24px;flex:none}
+.upload-copy{flex:1;min-width:0}.upload-copy strong{display:block;font-size:14px;font-weight:800;color:#34405c}.upload-copy p{font-size:10.5px;color:#8692a9;margin:6px 0 9px;line-height:1.65}
+.upload-formats{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.upload-formats span{font-size:9px;color:#7568d7;background:white;border:1px solid #e8e4fa;padding:4px 7px;border-radius:5px;font-weight:800}.upload-formats small{font-size:9px;color:#9cacc0;margin-left:5px}
+.upload-action{background:#6659ef;color:#fff;padding:13px 17px;font-size:11px;font-weight:800;white-space:nowrap;border-radius:9px;cursor:pointer;box-shadow:0 8px 20px #6559ef20;flex:none}.upload-action:hover{background:#584cda}
+.upload-feedback{background:white;border:1px solid #e5e9f3;border-radius:12px;padding:12px 17px;margin-bottom:17px;box-shadow:var(--shadow)}
+.upload-feedback-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.upload-feedback-title strong{font-size:11px;color:#52607c}.upload-feedback-title span{font-size:10px;color:#9aa5b8}
+.upload-feedback-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.upload-feedback-item{display:flex;align-items:center;gap:8px;border-radius:7px;padding:8px 10px;background:#f7f9fc;min-width:0;font-size:10px}
+.upload-feedback-item>span{font-weight:900;font-size:12px;color:#998aec}.upload-feedback-item b{max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#55617a}.upload-feedback-item small{font-size:9px;line-height:1.5;color:#8d99ae;flex:1;overflow-wrap:anywhere}
+.upload-feedback-item.is-success{background:#edf9f5}.upload-feedback-item.is-success>span{color:#1ba881}.upload-feedback-item.is-error{background:#fff3f4}.upload-feedback-item.is-error>span{color:#dd6577}
+@media(max-width:1100px){.upload-feedback-list{grid-template-columns:1fr}}
+@media(max-width:600px){.upload-zone{padding:14px;gap:10px;flex-wrap:wrap}.upload-glyph{width:42px;height:42px;font-size:20px}.upload-copy{flex:1 1 calc(100% - 56px)}.upload-copy strong{font-size:12px}.upload-action{width:100%;text-align:center;padding:11px}.upload-formats small{margin-left:0;width:100%}}
