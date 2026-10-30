@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - GameDoc-Auditor-v0.9-public.zip
+      - unpack.trigger
 permissions:
   contents: write
 jobs:
