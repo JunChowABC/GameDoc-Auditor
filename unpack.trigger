@@ -1,1 +1,1 @@
-Trigger source extraction for the V0.9 sanitized release.
+Trigger source extraction after workflow permission fix.
